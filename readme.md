@@ -1,5 +1,7 @@
 # Time-Man
-A tool used to choose the topic that you should study next and track the time you spend on them. 
+A tool used to choose the topic that you should study next and track the time you spend on them.
+
+https://sharonkartika.github.io/Time-Man/ 
 
 ### Features to be added
 - Option to add or remove tags to existsing topics. 
