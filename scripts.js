@@ -1,6 +1,9 @@
 let addTaskButton = document.getElementById('add-task-button');
 addTaskButton.addEventListener('click', getTopicDetails);
 topicListContainer = document.getElementById('topic-list-container');
+let chooseTopicButton = document.getElementById('choose-topic-button');
+chooseTopicButton.addEventListener('click',chooseTopic);
+let topicsList = [];
 
 displayToDOM();
 function Topic(title, desc, tags){
@@ -50,6 +53,8 @@ function createNode(t,i){
     })
     topicNode.appendChild(removeBtn);
 
+    topicNode.appendChild(document.createElement('hr'));
+
     topicListContainer.appendChild(topicNode);
 
 
@@ -59,4 +64,17 @@ function clearDOM(){
     while(topicListContainer.firstElementChild){
         topicListContainer.removeChild(topicListContainer.firstElementChild);
     }
+}
+
+function chooseTopic(){
+    topicsList =[];
+    for(let i=0;i<localStorage.length; i++){
+        topicsList.push(localStorage.key(i));
+    }
+    let choice = getRandomIndexFromArray(topicsList);
+    alert(topicsList[choice]);
+}
+
+function getRandomIndexFromArray(topicsList){
+    return Math.floor(Math.random()*topicsList.length)
 }
