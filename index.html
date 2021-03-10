@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <h1>Time-Man</h1>
     <hr>
-    <button id='add-task-button'>ADD TOPIC</button>   
+    <button id='add-task-button'>ADD TOPIC</button>
     <button id='choose-topic-button'>CHOOSE TOPIC</button>
 
     <hr>
     <div id='topic-list-container'></div>
 
+    <!-- firebase core -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
+    <!-- firebase services -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-firestore.js"></script>
+   
+    <!-- project scripts -->
     <script src='scripts.js'></script>
 </body>
+
 </html>
