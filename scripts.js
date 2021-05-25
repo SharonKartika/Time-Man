@@ -3,7 +3,6 @@ addTaskButton.addEventListener('click', getTopicDetails);
 topicListContainer = document.getElementById('topic-list-container');
 let chooseTopicButton = document.getElementById('choose-topic-button');
 chooseTopicButton.addEventListener('click', chooseTopic);
-let topicsList = [];
 
 // firebase config
 var firebaseConfig = {
@@ -19,6 +18,20 @@ firebase.initializeApp(firebaseConfig);
 var firestore = firebase.firestore();
 var docRef = firestore.doc("topics/topicList");
 
+firebase.firestore().enablePersistence()
+  .catch((err) => {
+      if (err.code == 'failed-precondition') {
+          // Multiple tabs open, persistence can only be enabled
+          // in one tab at a a time.
+          // ...
+      } else if (err.code == 'unimplemented') {
+          // The current browser does not support all of the
+          // features required to enable persistence
+          // ...
+      }
+  });
+
+  
 displayToDOM();
 function Topic(title, desc, tags) {
     this.title = title;
@@ -39,10 +52,6 @@ function getTopicDetails() {
 
 function addKeyValueToFireStore(topic) {
     //adds a key value pair to firestore
-    let title = topic.title;
-    let topicString = JSON.stringify(topic);
-    console.log(topicString);
-    //adds a key value pair
     firestore.collection('topics').add({
         title: topic.title,
         desc: topic.desc,
@@ -91,7 +100,8 @@ function createNode(t, i) {
     removeBtn = document.createElement('button');
     removeBtn.textContent = 'REMOVE';
     removeBtn.addEventListener('click', (e, i) => {
-        localStorage.removeItem(t.title);
+        // localStorage.removeItem(t.title);
+        removeKeyFromFirestore(t);
         displayToDOM();
     })
     topicNode.appendChild(removeBtn);
@@ -99,8 +109,23 @@ function createNode(t, i) {
     topicNode.appendChild(document.createElement('hr'));
 
     topicListContainer.appendChild(topicNode);
+}
 
-
+function removeKeyFromFirestore(t){
+    firestore.collection('topics').get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // console.log(`${doc.id} => ${doc.data().title}`);
+            let title = doc.data().title;
+            if(title == t.title){
+                firestore.collection('topics').doc(doc.id).delete().then(()=>{
+                    console.log('removal success');
+                }).catch((error)=>{
+                    console.error("error removing",error);
+                });
+            }
+        })
+    });
+    displayToDOM();
 }
 
 function clearDOM() {
@@ -110,10 +135,14 @@ function clearDOM() {
 }
 
 function chooseTopic() {
-    topicsList = [];
-    for (let i = 0; i < localStorage.length; i++) {
-        topicsList.push(localStorage.key(i));
-    }
+    let topicsList = [];
+    firestore.collection('topics').get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // console.log(`${doc.id} => ${doc.data().title}`);
+            let title = doc.data().title;
+            console.log(title);
+        })
+    });
     let choice = getRandomIndexFromArray(topicsList);
     alert(topicsList[choice]);
 }
